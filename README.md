@@ -79,8 +79,8 @@ room_booking/
 ### 1. Clone and configure environment
 
 ```bash
-git clone <repo-url>
-cd room_booking
+git clone https://github.com/yerbolatik/room-booking
+cd room-booking
 cp .env.example .env
 # Edit .env — set SECRET_KEY and POSTGRES_PASSWORD
 ```
