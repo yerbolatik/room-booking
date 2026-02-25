@@ -15,6 +15,7 @@ class Room(TimestampedModel):
     Indexes:
         - price_per_night  — for price range filters and ordering
         - capacity         — for capacity filters and ordering
+        - is_active        — for filtering available rooms
     """
 
     number = models.CharField(max_length=20, unique=True, verbose_name="Room number")

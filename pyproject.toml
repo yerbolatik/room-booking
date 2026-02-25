@@ -68,6 +68,7 @@ module = [
     "apps.*.migrations.*",
     "apps.*.admin",
     "apps.core.management.*",
+    "apps.users.management.*",
 ]
 ignore_errors = true
 
