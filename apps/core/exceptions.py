@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import logging
+from typing import Any
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
@@ -9,7 +12,7 @@ from rest_framework.views import exception_handler
 logger = logging.getLogger(__name__)
 
 
-def custom_exception_handler(exc, context):
+def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Response | None:
     """
     Custom DRF exception handler that normalises error responses to:
 
@@ -28,9 +31,7 @@ def custom_exception_handler(exc, context):
         # Flatten single-key "detail" responses.
         if isinstance(data, dict) and list(data.keys()) == ["detail"]:
             response.data = {"error": str(data["detail"])}
-        elif isinstance(data, dict):
-            response.data = {"errors": data}
-        elif isinstance(data, list):
+        elif isinstance(data, dict | list):
             response.data = {"errors": data}
         return response
 

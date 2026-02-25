@@ -4,13 +4,13 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
 
-from .base import *  # noqa: F403, F401
+from .base import *  # noqa: E402, F401, F403
 
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += [  # noqa: F405
+REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += [  # type: ignore[operator]  # noqa: F405
     "rest_framework.renderers.BrowsableAPIRenderer",
 ]
 

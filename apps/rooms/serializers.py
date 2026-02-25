@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from typing import Any
+
 from rest_framework import serializers
 
 from .models import Room
 
 
-class RoomSerializer(serializers.ModelSerializer):
+class RoomSerializer(serializers.ModelSerializer[Room]):
     """Full room representation — used for list and detail endpoints."""
 
     class Meta:
@@ -24,7 +26,7 @@ class RoomSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at", "updated_at"]
 
 
-class RoomAvailabilityQuerySerializer(serializers.Serializer):
+class RoomAvailabilityQuerySerializer(serializers.Serializer[dict[str, Any]]):
     """
     Query-parameter schema for the availability search endpoint.
 
@@ -40,7 +42,7 @@ class RoomAvailabilityQuerySerializer(serializers.Serializer):
         help_text="Desired check-out date (YYYY-MM-DD).",
     )
 
-    def validate(self, attrs: dict) -> dict:
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
         if attrs["check_in"] >= attrs["check_out"]:
             raise serializers.ValidationError("check_out must be after check_in.")
         return attrs

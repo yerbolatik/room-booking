@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime
+from typing import Any
 
 from rest_framework import serializers
 
@@ -10,7 +11,7 @@ from apps.rooms.serializers import RoomSerializer
 from .models import Booking
 
 
-class BookingCreateSerializer(serializers.Serializer):
+class BookingCreateSerializer(serializers.Serializer[dict[str, Any]]):
     """Input serializer for booking creation — validates dates only."""
 
     room_id = serializers.PrimaryKeyRelatedField(
@@ -28,7 +29,7 @@ class BookingCreateSerializer(serializers.Serializer):
         help_text="Optional guest notes.",
     )
 
-    def validate(self, attrs: dict) -> dict:
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
         today = datetime.date.today()
 
         if attrs["check_in"] < today:
@@ -42,7 +43,7 @@ class BookingCreateSerializer(serializers.Serializer):
         return attrs
 
 
-class BookingSerializer(serializers.ModelSerializer):
+class BookingSerializer(serializers.ModelSerializer[Booking]):
     """Full booking representation returned to clients."""
 
     room = RoomSerializer(read_only=True)

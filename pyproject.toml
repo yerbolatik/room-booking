@@ -59,12 +59,17 @@ strict = true
 ignore_missing_imports = true
 warn_unused_ignores = false
 
-[tool.mypy-config]
+[tool.django-stubs]
 django_settings_module = "config.settings.development"
 
 [[tool.mypy.overrides]]
-module = "mypy.plugins.django-stubs"
-django_settings_module = "config.settings.development"
+module = [
+    "apps.*.tests.*",
+    "apps.*.migrations.*",
+    "apps.*.admin",
+    "apps.core.management.*",
+]
+ignore_errors = true
 
 # ── ruff ──────────────────────────────────────────────────────────────────────
 [tool.ruff]

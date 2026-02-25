@@ -16,7 +16,6 @@ from rest_framework.test import APIClient
 
 from apps.rooms.models import Room
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Shared fixtures
 # ─────────────────────────────────────────────────────────────────────────────

@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from drf_spectacular.utils import OpenApiParameter, OpenApiTypes, extend_schema, extend_schema_view
+from django.db.models import QuerySet
+from drf_spectacular.utils import (  # type: ignore[attr-defined]
+    OpenApiParameter,
+    OpenApiTypes,
+    extend_schema,
+    extend_schema_view,
+)
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
@@ -24,7 +30,7 @@ from .services import RoomAvailabilityService
     ),
     retrieve=extend_schema(summary="Retrieve room details"),
 )
-class RoomViewSet(viewsets.ReadOnlyModelViewSet):
+class RoomViewSet(viewsets.ReadOnlyModelViewSet):  # type: ignore[type-arg]
     """
     Read-only viewset for Room resources.
 
@@ -40,7 +46,7 @@ class RoomViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ["price_per_night", "capacity", "number"]
     ordering = ["number"]
 
-    def get_queryset(self):  # type: ignore[override]
+    def get_queryset(self) -> QuerySet[Room]:  # type: ignore[override]
         return Room.objects.filter(is_active=True).order_by(*self.ordering)
 
     @extend_schema(

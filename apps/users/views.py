@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import generics, status
@@ -28,7 +30,7 @@ User = get_user_model()
         },
     )
 )
-class RegisterView(generics.CreateAPIView):
+class RegisterView(generics.CreateAPIView):  # type: ignore[type-arg]
     """
     Register a new user account.
 
@@ -57,8 +59,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     The response also includes basic user metadata.
     """
 
-    serializer_class = CustomTokenObtainPairSerializer
-    permission_classes = [AllowAny]
+    serializer_class = CustomTokenObtainPairSerializer  # type: ignore[assignment]
+    permission_classes = [AllowAny]  # type: ignore[assignment]
 
     @extend_schema(
         summary="Login - obtain JWT token pair",
@@ -90,11 +92,11 @@ class CustomTokenRefreshView(TokenRefreshView):
     patch=extend_schema(summary="Partially update own profile"),
     put=extend_schema(summary="Update own profile"),
 )
-class ProfileView(generics.RetrieveUpdateAPIView):
+class ProfileView(generics.RetrieveUpdateAPIView):  # type: ignore[type-arg]
     """Retrieve or update the authenticated user's own profile."""
 
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self) -> User:  # type: ignore[override]
+    def get_object(self) -> Any:  # type: ignore[override]
         return self.request.user

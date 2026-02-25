@@ -9,6 +9,7 @@ from __future__ import annotations
 import datetime
 import logging
 from decimal import Decimal
+from typing import Any
 
 from django.db import transaction
 
@@ -33,7 +34,7 @@ class BookingService:
     @staticmethod
     def create_booking(
         *,
-        user,
+        user: Any,
         room: Room,
         check_in: datetime.date,
         check_out: datetime.date,
@@ -61,7 +62,7 @@ class BookingService:
             try:
                 room = Room.objects.select_for_update().get(pk=room.pk)
             except Room.DoesNotExist:
-                raise RoomNotAvailableError("Room does not exist.")
+                raise RoomNotAvailableError("Room does not exist.") from None
 
             # Step 2 - room must be active.
             if not room.is_active:
@@ -100,7 +101,7 @@ class BookingService:
         return booking
 
     @staticmethod
-    def cancel_booking(*, booking: Booking, user) -> Booking:
+    def cancel_booking(*, booking: Booking, user: Any) -> Booking:
         """
         Cancel a booking owned by *user*.
 

@@ -5,7 +5,7 @@ import django_filters
 from .models import Room
 
 
-class RoomFilter(django_filters.FilterSet):
+class RoomFilter(django_filters.FilterSet):  # type: ignore[misc]
     """
     Filtering options for the Room list endpoint.
 

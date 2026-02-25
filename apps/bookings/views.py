@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+from typing import Any
+
+from django.db.models import QuerySet
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import BaseSerializer
 
-from .exceptions import BookingCancellationError
 from .filters import BookingFilter
 from .models import Booking
 from .permissions import IsBookingOwnerOrAdmin
@@ -34,7 +37,7 @@ class BookingViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
-    viewsets.GenericViewSet,
+    viewsets.GenericViewSet,  # type: ignore[type-arg]
 ):
     """
     Booking resource.
@@ -53,7 +56,7 @@ class BookingViewSet(
     ordering_fields = ["check_in", "check_out", "created_at", "total_price"]
     ordering = ["-created_at"]
 
-    def get_queryset(self):  # type: ignore[override]
+    def get_queryset(self) -> QuerySet[Booking]:  # type: ignore[override]
         qs = (
             Booking.objects.select_related("room", "user")
             .order_by(*self.ordering)
@@ -63,12 +66,12 @@ class BookingViewSet(
             qs = qs.filter(user=self.request.user)
         return qs
 
-    def get_serializer_class(self):  # type: ignore[override]
+    def get_serializer_class(self) -> type[BaseSerializer[Any]]:  # type: ignore[override]
         if self.action == "create":
             return BookingCreateSerializer
         return BookingSerializer
 
-    def get_permissions(self):  # type: ignore[override]
+    def get_permissions(self) -> list[BasePermission]:  # type: ignore[override]
         if self.action in ("retrieve", "cancel"):
             return [IsAuthenticated(), IsBookingOwnerOrAdmin()]
         return [IsAuthenticated()]

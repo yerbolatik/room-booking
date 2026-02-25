@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -6,7 +8,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 User = get_user_model()
 
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer[Any]):
     password = serializers.CharField(
         write_only=True,
         required=True,
@@ -32,12 +34,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id"]
 
-    def validate(self, attrs):
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
         if attrs["password"] != attrs.pop("password_confirm"):
             raise serializers.ValidationError({"password": "Passwords do not match."})
         return attrs
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict[str, Any]) -> Any:
         first_name = validated_data.get("first_name", "")
         last_name = validated_data.get("last_name", "")
         # username is derived from full name; ensure uniqueness by appending email prefix if needed.
@@ -57,7 +59,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer[Any]):
     full_name = serializers.CharField(read_only=True)
 
     class Meta:
@@ -77,11 +79,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     """Enriches the token response with basic user info."""
 
-    def validate(self, attrs):
-        data = super().validate(attrs)
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
+        data: dict[str, Any] = super().validate(attrs)
         data["user"] = {
-            "id": self.user.id,
-            "email": self.user.email,
-            "full_name": self.user.full_name,
+            "id": self.user.id,  # type: ignore[union-attr]
+            "email": self.user.email,  # type: ignore[union-attr]
+            "full_name": self.user.full_name,  # type: ignore[union-attr]
         }
         return data

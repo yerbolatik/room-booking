@@ -5,7 +5,7 @@ import django_filters
 from .models import Booking
 
 
-class BookingFilter(django_filters.FilterSet):
+class BookingFilter(django_filters.FilterSet):  # type: ignore[misc]
     """
     Filtering options for the Booking list endpoint.
 

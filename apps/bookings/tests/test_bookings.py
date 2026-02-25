@@ -7,14 +7,12 @@ import datetime
 from decimal import Decimal
 
 import pytest
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from apps.bookings.models import Booking
 from apps.bookings.services import BookingService
 from apps.rooms.models import Room
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Fixtures
